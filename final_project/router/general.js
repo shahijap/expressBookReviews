@@ -1,4 +1,5 @@
 const express = require('express');
+const axios = require('axios');
 let books = require("./booksdb.js");
 let isValid = require("./auth_users.js").isValid;
 let users = require("./auth_users.js").users;
@@ -77,5 +78,53 @@ public_users.get('/review/:isbn',function (req, res) {
     return res.status(403).json({ message: "Book does not found" });
   }
 });
+
+const fetchBooksList = async () => {
+    try {
+        const { data } =  await axios.get('http://localhost:5000/');
+        if (data.error) throw new Error(data.error);
+        console.log(data);
+        return data;
+    } catch (error) {
+        console.error(error.message);
+    }
+}
+fetchBooksList();
+
+const getBooksByisbn = async (isbn) => {
+    try {
+        const { data } = await axios.get(`http://localhost:5000/isbn/${isbn}`);
+        if (data.error) throw new Error(data.error);
+        console.log(data);
+        return data;
+    } catch (error) {
+        console.error(error.message);
+    }
+}
+getBooksByisbn('2');
+
+const getBookDetailsByAuthor = async (author) => {
+    try {
+        const { data } = await axios.get(`http://localhost:5000/author/${author}`);
+        if (data.error) throw new Error(data.error);
+        console.log(data);
+        return data;
+    } catch (error) {
+        console.error(error.message);
+    }
+}
+getBookDetailsByAuthor("Jane Austen");
+
+const getBookDetailsByTitle = async (title) => {
+    try {
+        const { data } = await axios.get(`http://localhost:5000/title/${title}`);
+        if (data.error) throw new Error(data.error);
+        console.log(data);
+        return data;
+    } catch (error) {
+        console.error(error.message);
+    }
+} 
+getBookDetailsByTitle("Things Fall Apart");
 
 module.exports.general = public_users;
